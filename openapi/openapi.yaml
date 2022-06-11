@@ -1,0 +1,75 @@
+openapi: 3.0.0
+info:
+  title: 'api-gateway-sample'
+  version: 1.0.0
+paths:
+  /:
+    get:
+      description: '../app/api/redirect/get.ts'
+      parameters: []
+      responses:
+        '302':
+          description: 'Found'
+        '500':
+           description: 'Internal Server Error'
+           content:
+             application/json:
+               schema:
+                 $ref: '#/components/schemas/ServerError'
+      x-amazon-apigateway-integration:
+        contentHandling: CONVERT_TO_TEXT
+        httpMethod: POST
+        passthroughBehavior: when_no_match
+        responses:
+          default:
+            statusCode: '200'
+        type: aws_proxy
+        uri: >-
+          arn:aws:apigateway:{REGION}:lambda:path/2015-03-31/functions/arn:aws:lambda:{REGION}:{ACCOUNT_ID}:function:twitter-oauth-sample-api-redirect/invocations
+  /callback:
+    get:
+      description: '../app/api/callback/get.ts'
+      parameters: []
+      responses:
+        '200':
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetCallbackResponse'
+        '302':
+          description: 'Found'
+        '500':
+           description: 'Internal Server Error'
+           content:
+             application/json:
+               schema:
+                 $ref: '#/components/schemas/ServerError'
+      x-amazon-apigateway-integration:
+        contentHandling: CONVERT_TO_TEXT
+        httpMethod: POST
+        passthroughBehavior: when_no_match
+        responses:
+          default:
+            statusCode: '200'
+        type: aws_proxy
+        uri: >-
+          arn:aws:apigateway:{REGION}:lambda:path/2015-03-31/functions/arn:aws:lambda:{REGION}:{ACCOUNT_ID}:function:twitter-oauth-sample-api-callback/invocations
+components:
+  schemas:
+    GetCallbackResquest:
+      type: object
+      properties:
+        state:
+          type: string
+          nullable: false
+        code:
+          type: string
+          nullable: false
+    GetCallbackResponse:
+      type: object
+    ServerError:
+      type: object
+      properties:
+        message:
+          type: string

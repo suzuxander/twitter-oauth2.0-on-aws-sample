@@ -1,0 +1,142 @@
+openapi: 3.0.0
+info:
+  title: 'api-gateway-sample'
+  version: 1.0.0
+servers:
+  - url: 'https://api.twitter.com'
+paths:
+  /2/oauth2/token:
+    post:
+      description: 'get access token'
+      parameters:
+        - in: query
+          name: code
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: client_id
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: grant_type
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: redirect_uri
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: code_verifier
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostAccessTokenResponse'
+        '500':
+           description: 'Internal Server Error'
+           content:
+             application/json:
+               schema:
+                 $ref: '#/components/schemas/ServerError'
+  /2/users/me:
+    get:
+      security:
+        - auth: []
+      description: 'get users me'
+      parameters: []
+      responses:
+        '200':
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetUsersMeResponse'
+        '500':
+           description: 'Internal Server Error'
+           content:
+             application/json:
+               schema:
+                 $ref: '#/components/schemas/ServerError'
+components:
+  securitySchemes:
+    auth:
+      type: http
+      in: header
+      name: Authorization
+      scheme: bearer
+  schemas:
+    PostAccessTokenRequest:
+      type: object
+      properties:
+        code:
+          type: string
+          nullable: false
+        client_id:
+          type: string
+          nullable: false
+        grant_type:
+          type: string
+          nullable: false
+          example: 'authorization_code'
+        redirect_uri:
+          type: string
+          nullable: false
+        code_verifier:
+          type: string
+          nullable: false
+    PostAccessTokenResponse:
+      type: object
+      required:
+        - access_token
+        - expires_in
+        - scope
+        - token_type
+      properties:
+        access_token:
+          type: string
+          nullable: false
+        expires_in:
+          type: number
+          nullable: false
+        scope:
+          type: string
+          nullable: false
+        token_type:
+          type: string
+          nullable: false
+    GetUsersMeResponse:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          type: object
+          nullable: false
+          required:
+            - id
+            - name
+            - username
+          properties:
+            id:
+              type: string
+              nullable: false
+            name:
+              type: string
+              nullable: false
+            username:
+              type: string
+              nullable: false
+    ServerError:
+      type: object
+      properties:
+        message:
+          type: string
