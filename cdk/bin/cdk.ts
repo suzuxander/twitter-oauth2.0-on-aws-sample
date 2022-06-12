@@ -7,8 +7,9 @@ import * as fs from 'fs';
 import { Runtime } from 'aws-cdk-lib/aws-lambda';
 import { Effect, PolicyStatement, ServicePrincipal } from 'aws-cdk-lib/aws-iam';
 import { config } from 'dotenv';
+import * as path from 'path';
 
-config();
+config({ path: path.join(__dirname, '../.env') });
 
 interface OpenApi {
   paths: {
@@ -82,8 +83,11 @@ Object.keys(openapi.paths).forEach(path => {
       role,
       environment: {
         CLIENT_ID: process.env.CLIENT_ID as string,
+        CLIENT_SECRET: process.env.CLIENT_SECRET as string,
         BUCKET: bucket.bucketName as string,
         REDIRECT_URI: `https://${api.restApiId}.execute-api.${cdk.Aws.REGION}.${cdk.Aws.URL_SUFFIX}/${api.deploymentStage.stageName}/callback`,
+        // REDIRECT_URI_CONFIDENTIAL: `https://${api.restApiId}.execute-api.${cdk.Aws.REGION}.${cdk.Aws.URL_SUFFIX}/${api.deploymentStage.stageName}/confidential/callback`,
+        // REDIRECT_URI_PUBLIC: `https://${api.restApiId}.execute-api.${cdk.Aws.REGION}.${cdk.Aws.URL_SUFFIX}/${api.deploymentStage.stageName}/public/callback`,
       }
     });
     func.addPermission('Permission', {
