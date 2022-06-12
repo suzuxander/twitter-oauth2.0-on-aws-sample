@@ -1,7 +1,8 @@
 # twitter-oauth2-sample
 ## 概要
-TwitterのOAuth2.0を使用するプロジェクトのサンプル。  
-API Gateway + Lambda関数を使用して認証認可を行う。
+TwitterのOAuth2.0を使用したTwitter API v2を実行するプロジェクトのサンプル。  
+API Gateway + Lambda関数を使用して認可等を行う。  
+AWSリソースのデプロイはCDKにより行う。
 
 ## 前提
 以下はインストール済みとする。
