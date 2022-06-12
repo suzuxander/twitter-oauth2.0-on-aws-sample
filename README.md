@@ -1,7 +1,7 @@
 # twitter-oauth2-sample
 ## 概要
 TwitterのOAuth2.0を使用したTwitter API v2を実行するプロジェクトのサンプル。  
-API Gateway + Lambda関数を使用して認可等を行う。  
+API Gateway + Lambda関数を使用して認可等を行う。実装言語はTypescript。  
 AWSリソースのデプロイはCDKにより行う。
 
 ## 前提
@@ -76,14 +76,14 @@ https://xxxxxxxxxx.execute-api.ap-northeast-1.amazonaws.com/dev/callback
    $ npm run build
    $ node dist/client.js {ACCESS_TOKEN}
    {
-   id: 'ID',
+   id: '{ID}',
    name: '{NAME}',
    username: '{USERNAME}'
    }
    ```
 
 ## APIの説明
-### [GET /](./app/api/redirect/get.ts)  
+### [GET /](./app/api/auth/get.ts)  
 Twitterの認証ページのURLを生成し、リダイレクトさせるエンドポイント。  
 認証ページのパラメータとしていくつかの情報が必要であるため、それらをこのAPI内で生成している。  
 code_verifierは認証ページからコールバックされた後でaccess_tokenの取得の際に必要となるためS3バケットに保存している。
@@ -92,7 +92,7 @@ code_verifierは認証ページからコールバックされた後でaccess_tok
 Twitterの認証ページでアクセス許可が行われた際にリダイレクトされるエンドポイント。  
 Twitterの認証ページから受け取ったパラメータを返却しているだけ。
   
-### [GET /accesstoken](./app/api/accesstoken/get.ts)
+### [GET /accesstoken](./app/api/token/get.ts)
 access_tokenを取得するためのエンドポイント。  
 callbackで受け取ったstateとcodeをパラメータで付与してリクエストをくることでaccess_tokenを取得する。
   
@@ -107,18 +107,12 @@ https://developer.twitter.com/en/docs/authentication/oauth-2-0/authorization-cod
 </div>
 
 ### Authorization Requestの各パラメータ
-- response_type  
-  `code`固定。
-- client_id  
-  Developer Portalで確認したクライアント識別子。
-- redirect_uri  
-  Developer Portalで登録したいずれかのURL。
-- scope  
-  要求するアクセス範囲を明示するパラメーター。[こちら](https://developer.twitter.com/en/docs/authentication/oauth-2-0/authorization-code)から選択。
-- state  
-  CSRF対策用のパラメーター。ランダムな値を指定。
-- code_challenge  
-  code_verifierを後述の[code_challenge_method](https://datatracker.ietf.org/doc/html/rfc7636#section-4.2)で計算したパラメーター。
-  code_verifierは推測不可能なランダムな文字列であり、43文字から128文字の範囲で指定する必要がある。
-- code_challenge_method  
-  code_verifierからcode_challengeを導出する際に利用するアルゴリズム。"plain"または"s256"が指定可能。
+|parameter|description|
+|---|---|
+|response_type|`code`固定。|
+|client_id|Developer Portalで確認したクライアント識別子。|
+|redirect_uri|Developer Portalで登録したいずれかのURL。|
+|scope|要求するアクセス範囲を明示するパラメーター。[こちら](https://developer.twitter.com/en/docs/authentication/oauth-2-0/authorization-code)から選択。|
+|state|CSRF対策用のパラメーター。ランダムな値を指定。|
+|code_challenge|code_verifierを後述の[code_challenge_method](https://datatracker.ietf.org/doc/html/rfc7636#section-4.2)で計算したパラメーター。code_verifierは推測不可能なランダムな文字列であり、43文字から128文字の範囲で指定する必要がある。|
+|code_challenge_method|code_verifierからcode_challengeを導出する際に利用するアルゴリズム。`plain`または`s256`が指定可能。|
