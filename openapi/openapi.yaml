@@ -5,7 +5,7 @@ info:
 paths:
   /:
     get:
-      description: '../app/api/redirect/get.ts'
+      description: '../app/api/auth/get.ts'
       parameters: []
       responses:
         '302':
@@ -25,11 +25,21 @@ paths:
             statusCode: '200'
         type: aws_proxy
         uri: >-
-          arn:aws:apigateway:{REGION}:lambda:path/2015-03-31/functions/arn:aws:lambda:{REGION}:{ACCOUNT_ID}:function:twitter-oauth-sample-api-redirect/invocations
+          arn:aws:apigateway:{REGION}:lambda:path/2015-03-31/functions/arn:aws:lambda:{REGION}:{ACCOUNT_ID}:function:twitter-oauth-sample-api-authorize/invocations
   /callback:
     get:
       description: '../app/api/callback/get.ts'
-      parameters: []
+      parameters:
+        - in: query
+          name: code
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: state
+          schema:
+            type: string
+          required: true
       responses:
         '200':
           description: 'OK'
@@ -55,6 +65,29 @@ paths:
         type: aws_proxy
         uri: >-
           arn:aws:apigateway:{REGION}:lambda:path/2015-03-31/functions/arn:aws:lambda:{REGION}:{ACCOUNT_ID}:function:twitter-oauth-sample-api-callback/invocations
+  /accesstoken:
+    get:
+      description: '../app/api/token/get.ts'
+      parameters: []
+      responses:
+        '302':
+          description: 'Found'
+        '500':
+          description: 'Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+      x-amazon-apigateway-integration:
+        contentHandling: CONVERT_TO_TEXT
+        httpMethod: POST
+        passthroughBehavior: when_no_match
+        responses:
+          default:
+            statusCode: '200'
+        type: aws_proxy
+        uri: >-
+          arn:aws:apigateway:{REGION}:lambda:path/2015-03-31/functions/arn:aws:lambda:{REGION}:{ACCOUNT_ID}:function:twitter-oauth-sample-api-get-token/invocations
 components:
   schemas:
     GetCallbackResquest:
