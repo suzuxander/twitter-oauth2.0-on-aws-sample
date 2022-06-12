@@ -1,16 +1,19 @@
-const clientId = process.env.CLIENT_ID;
-if (!clientId) throw new Error('process.env.CLIENT_ID is required.');
 
-const bucket = process.env.BUCKET;
-if (!bucket) throw new Error('process.env.BUCKET is required.');
-
-const redirectUri = process.env.REDIRECT_URI;
-if (!redirectUri) throw new Error('process.env.REDIRECT_URI is required.');
+const getEnvironment = (key: string): string => {
+  const value = process.env[key];
+  if (!value) throw new Error(`process.env.${key} is required.`);
+  return value;
+};
 
 const config = {
-  clientId,
-  bucket,
-  redirectUri
+  clientId: getEnvironment('CLIENT_ID'),
+  clientSecret: getEnvironment('CLIENT_SECRET'),
+  bucket: getEnvironment('BUCKET'),
+  redirectUri: getEnvironment('REDIRECT_URI')
+  // redirectUri: {
+  //   confidential: getEnvironment('REDIRECT_URI_CONFIDENTIAL'),
+  //   public: getEnvironment('REDIRECT_URI_PUBLIC'),
+  // }
 };
 
 export default config;
