@@ -1,4 +1,4 @@
-# twitter-oauth2-on-aws-sample
+# twitter-oauth2.0-on-aws-sample
 ## 概要
 TwitterのOAuth2.0を使用したTwitter API v2をAPI Gateway + Lambda関数を使用して実行するプロジェクトのサンプル。  
 AWSリソースのデプロイはCDKにより行う。
