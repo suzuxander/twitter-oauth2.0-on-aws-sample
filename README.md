@@ -114,5 +114,5 @@ https://developer.twitter.com/en/docs/authentication/oauth-2-0/authorization-cod
 |redirect_uri|Developer Portalで登録したいずれかのURL。|
 |scope|要求するアクセス範囲を明示するパラメーター。[こちら](https://developer.twitter.com/en/docs/authentication/oauth-2-0/authorization-code)から選択。|
 |state|CSRF対策用のパラメーター。ランダムな値を指定。|
-|code_challenge|code_verifierを後述の[code_challenge_method](https://datatracker.ietf.org/doc/html/rfc7636#section-4.2)で計算したパラメーター。code_verifierは推測不可能なランダムな文字列であり、43文字から128文字の範囲で指定する必要がある。|
+|code_challenge|code_verifierを[code_challenge_method](https://datatracker.ietf.org/doc/html/rfc7636#section-4.2)で計算したパラメーター。code_verifierは推測不可能なランダムな文字列であり、43文字から128文字の範囲で指定する必要がある。|
 |code_challenge_method|code_verifierからcode_challengeを導出する際に利用するアルゴリズム。`plain`または`s256`が指定可能。|
