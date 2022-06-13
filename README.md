@@ -45,7 +45,7 @@ twitter-oauth2-sample.ApiEndpoint00000000 = https://xxxxxxxxxx.execute-api.ap-no
 
 ```
 ### リダイレクトURLの変更
-Twitterの[Developer Portal](https://developer.twitter.com/en/portal/dashboard)で`Callback URI / Redirect URL`の値をデプロイで生成されたAPIのエンドポイント + `public/callback`に変更する。  
+Twitterの[Developer Portal](https://developer.twitter.com/en/portal/dashboard)で`Callback URI / Redirect URL`の値をデプロイで生成されたAPIのエンドポイント + `callback`に変更する。  
 ```
 https://xxxxxxxxxx.execute-api.ap-northeast-1.amazonaws.com/dev/callback
 ```
