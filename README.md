@@ -24,11 +24,11 @@ $ npm run init
 ### CDKデプロイ用の環境変数を設定
 ```
 $ vim .env
-ACCOUNT_ID={ACCOUNT_ID} >> cdk/.env
-REGION={REGION} >> cdk/.env
-BUCKET={BUCKET} >> cdk/.env                 # code_verifierを保存するバケット
-CLIENT_ID={CLIENT_ID} >> cdk/.env           # "Twitterの設定 1"でメモした値
-CLIENT_SECRET={CLIENT_SECRET} >> cdk/.env   # "Twitterの設定 1"でメモした値
+ACCOUNT_ID={ACCOUNT_ID}          # AWSのアカウントID
+REGION={REGION}                  # AWSリソースをデプロイするリージョン
+BUCKET={BUCKET}                  # code_verifierを保存するバケット
+CLIENT_ID={CLIENT_ID}            # "Twitterの設定 1"でメモした値
+CLIENT_SECRET={CLIENT_SECRET}    # "Twitterの設定 1"でメモした値
 ```
 ### CDKデプロイ
 ```
