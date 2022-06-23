@@ -38,7 +38,7 @@ export const getAccessToken = async (code: string, codeVerifier: string): Promis
     code,
     config.clientId,
     'authorization_code',
-    config.redirectUri,
+    config.callbackUri,
     codeVerifier,
     {
       auth: {

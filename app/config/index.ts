@@ -9,11 +9,7 @@ const config = {
   clientId: getEnvironment('CLIENT_ID'),
   clientSecret: getEnvironment('CLIENT_SECRET'),
   bucket: getEnvironment('BUCKET'),
-  redirectUri: getEnvironment('REDIRECT_URI')
-  // redirectUri: {
-  //   confidential: getEnvironment('REDIRECT_URI_CONFIDENTIAL'),
-  //   public: getEnvironment('REDIRECT_URI_PUBLIC'),
-  // }
+  callbackUri: getEnvironment('CALLBACK_URI')
 };
 
 export default config;

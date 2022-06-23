@@ -14,7 +14,7 @@ const main = async (): Promise<string> => {
   const codeChallenge = generateCodeChallenge(codeVerifier);
 
   return generateTwitterAuthorizeUrl(
-    state, codeChallenge, config.redirectUri);
+    state, codeChallenge, config.callbackUri);
 };
 
 export const handler = async (event: APIGatewayEvent, context: any, callback: Callback): Promise<void> => {

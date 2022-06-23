@@ -1,37 +1,39 @@
-# twitter-oauth2-sample
+# twitter-oauth2.0-on-aws-sample
 ## 概要
 TwitterのOAuth2.0を使用したTwitter API v2を実行するプロジェクトのサンプル。  
 API Gateway + Lambda関数を使用して認可等を行う。実装言語はTypescript。  
 AWSリソースのデプロイはCDKにより行う。
 
 ## 前提
-以下はインストール済みとする。
-- NodeJS 16くらい
-- Java 8くらい (openapi-generatorを実行する際に必要)
+- Twitter Developerの登録が完了している
+- 以下はインストール済みとする
+   - NodeJS 16くらい
+   - Java 8くらい (openapi-generatorを実行する際に必要)
 
 ## セットアップ
-### Twitter Developer Potalの設定
+### 1. Twitter Developer Portalの設定
 Twitterの[Developer Portal](https://developer.twitter.com/en/portal/dashboard)にてProject or Appを追加し、以下設定を行う。
 - OAuth2.0を有効化する
-- "Type of App"は`Public Client`と`Confidential Client`の2種類あるが、`Confidential Client`を選択する (`Public Client`でも問題ないはず)
-- "Callback URI / Redirect URL"はこの時点では適当な値を設定しておく
-- Saveした際に生成される`Client ID`、`Client Secret`などのクレデンシャル情報は必ずメモしておく
+- `Type of App`は`Public Client`と`Confidential Client`の2種類あるが、`Confidential Client`を選択する (`Public Client`でも問題ないはず)
+- `Callback URI / Redirect URL`はこの時点では適当な値を設定しておく
+- 保存した際に生成される`Client ID`、`Client Secret`などのクレデンシャル情報は必ずメモしておく
 
-### 必要なライブラリのインストール
-```
+### 2. 必要なライブラリのインストール
+```bash
 $ npm run init
 ```
-### CDKデプロイ用の環境変数を設定
+### 3. CDKデプロイ用の環境変数を設定
 ```
 $ vim .env
 ACCOUNT_ID={ACCOUNT_ID}          # AWSのアカウントID
 REGION={REGION}                  # AWSリソースをデプロイするリージョン
 BUCKET={BUCKET}                  # code_verifierを保存するバケット
-CLIENT_ID={CLIENT_ID}            # "Twitterの設定 1"でメモした値
-CLIENT_SECRET={CLIENT_SECRET}    # "Twitterの設定 1"でメモした値
+CLIENT_ID={CLIENT_ID}            # Twitter Developer Portalで設定を行った際に取得したClientID
+CLIENT_SECRET={CLIENT_SECRET}    # Twitter Developer Portalで設定を行った際に取得したClientSecret
+CALLBACK_URL=dummy               # 一旦適当な値を入れておく
 ```
-### CDKデプロイ
-```
+### 4. CDKデプロイ
+```bash
 $ npm run deploy
 
 twitter-oauth2-sample: creating CloudFormation changeset...
@@ -44,43 +46,59 @@ Outputs:
 twitter-oauth2-sample.ApiEndpoint00000000 = https://xxxxxxxxxx.execute-api.ap-northeast-1.amazonaws.com/dev/
 
 ```
-### リダイレクトURLの変更
+### 5. コールバックURLの変更
 Twitterの[Developer Portal](https://developer.twitter.com/en/portal/dashboard)で`Callback URI / Redirect URL`の値をデプロイで生成されたAPIのエンドポイント + `callback`に変更する。  
 ```
 https://xxxxxxxxxx.execute-api.ap-northeast-1.amazonaws.com/dev/callback
 ```
+### 6. CDKデプロイ用の環境変数を再設定
+適当な値を入れていたコールバックURLをデプロイで生成されたAPIのエンドポイント + `callback`に変更する。
+```
+$ vim .env
+CALLBACK_URL=https://xxxxxxxxxx.execute-api.ap-northeast-1.amazonaws.com/dev/callback 
+```
+### 7. CDKデプロイ
+コールバックURLの変更を反映させるために再度デプロイを実行する。
+```bash
+$ npm run deploy
+```
 
-### 動作確認
-1. デプロイで生成されたAPIの以下エンドポイントにブラウザからアクセスする
-   ```
-   https://xxxxxxxxxx.execute-api.ap-northeast-1.amazonaws.com/dev/
-   ```
-1. 「Twitterアカウントへのアクセスを求めています.」という画面が表示されるので、「アプリにアクセスを許可」をクリックする
-1. 以下のようにレスポンスの内容が表示されれば、Twitterの認証ページからのコールバックが受け取れている
-   ```json
-   {"state":"{STATE}","code":"{CODE}"}
-   ```
-1. 以下のURLにブラウザからアクセスする (curlでもOK)
-   `state`、`code`はコールバックで受け取った値を入れる
-   ```
-   https://xxxxxxxxxx.execute-api.ap-northeast-1.amazonaws.com/dev/accesstoken?state={STATE}&cpde={CODE}
-   ```
-   以下のようにレスポンスが表示されればアクセストークンの取得が成功している
-   ```json
-   {"token_type":"bearer","expires_in":7200,"access_token":"{ACCESS_TOKEN}","scope":"users.read tweet.read"}
-   ```
-1. 以下のコマンドを実行する。
-   このコマンドではTwitter APIの[GET /2/users/me](https://developer.twitter.com/en/docs/twitter-api/users/lookup/api-reference/get-users-me#tab1)に対してリクエストを送信している。  
-   以下のようなレスポンスが返ってきたら正常にAPIを実行できている。
-   ```bash
-   $ npm run build
-   $ node dist/client.js {ACCESS_TOKEN}
-   {
+
+## 動作確認
+### 1. 認証ページにアクセス 
+デプロイで生成されたAPIの以下エンドポイントにブラウザからアクセスする。
+```
+https://xxxxxxxxxx.execute-api.ap-northeast-1.amazonaws.com/dev/
+```
+### 2. アプリにアクセスを許可
+「Twitterアカウントへのアクセスを求めています.」という画面が表示されるので、「アプリにアクセスを許可」をクリックする。
+以下のようにレスポンスの内容が表示されれば、Twitterの認証ページからのコールバックが受け取れている
+```json
+{"state":"{STATE}","code":"{CODE}"}
+```
+### 3. アクセストークンの取得
+以下のURLにブラウザからアクセスする。 (curlなどでもOK)  
+`state`、`code`はコールバックで受け取った値を入れる。
+```
+https://xxxxxxxxxx.execute-api.ap-northeast-1.amazonaws.com/dev/token?state={STATE}&cpde={CODE}
+```
+以下のようにレスポンスが表示されればアクセストークンの取得が成功している
+```json
+{"token_type":"bearer","expires_in":7200,"access_token":"{ACCESS_TOKEN}","scope":"users.read tweet.read"}
+```
+### 4. Twitter APIを実行
+以下のコマンドを実行する。  
+このコマンドではTwitter APIの[GET /2/users/me](https://developer.twitter.com/en/docs/twitter-api/users/lookup/api-reference/get-users-me#tab1)に対してリクエストを送信している。  
+以下のようなレスポンスが返ってきたら正常にAPIを実行できている。
+```bash
+$ npm run build
+$ node dist/client.js {ACCESS_TOKEN}
+{
    id: '{ID}',
    name: '{NAME}',
    username: '{USERNAME}'
-   }
-   ```
+}
+```
 
 ## APIの説明
 ### [GET /](./app/api/auth/get.ts)  
