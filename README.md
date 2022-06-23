@@ -1,7 +1,6 @@
 # twitter-oauth2.0-on-aws-sample
 ## 概要
-TwitterのOAuth2.0を使用したTwitter API v2を実行するプロジェクトのサンプル。  
-API Gateway + Lambda関数を使用して認可等を行う。実装言語はTypescript。  
+TwitterのOAuth2.0を使用したTwitter API v2をAPI Gateway + Lambda関数を使用して実行するプロジェクトのサンプル。  
 AWSリソースのデプロイはCDKにより行う。
 
 ## 前提
