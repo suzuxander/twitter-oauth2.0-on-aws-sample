@@ -109,7 +109,7 @@ code_verifierは認証ページからコールバックされた後でaccess_tok
 Twitterの認証ページでアクセス許可が行われた際にリダイレクトされるエンドポイント。  
 Twitterの認証ページから受け取ったパラメータを返却しているだけ。
   
-### [GET /accesstoken](./app/api/token/get.ts)
+### [GET /token](./app/api/token/get.ts)
 access_tokenを取得するためのエンドポイント。  
 callbackで受け取ったstateとcodeをパラメータで付与してリクエストをくることでaccess_tokenを取得する。
   

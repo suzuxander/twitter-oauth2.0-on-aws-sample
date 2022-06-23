@@ -1,5 +1,5 @@
 {
-  "name": "twitter-oauth2-sample",
+  "name": "twitter-oauth2.0-on-aws-sample",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -17,14 +17,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/suzuxander/twitter-oauth2-sample.git"
+    "url": "git+https://github.com/suzuxander/twitter-oauth2.0-on-aws-sample.git"
   },
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/suzuxander/twitter-oauth2-sample/issues"
+    "url": "https://github.com/suzuxander/twitter-oauth2.0-on-aws-sample/issues"
   },
-  "homepage": "https://github.com/suzuxander/twitter-oauth2-sample#readme",
+  "homepage": "https://github.com/suzuxander/twitter-oauth2.0-on-aws-sample#readme",
   "dependencies": {
     "@openapitools/openapi-generator-cli": "^2.5.1",
     "@types/aws-lambda": "^8.10.99",
