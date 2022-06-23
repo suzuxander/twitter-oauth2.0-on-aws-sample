@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  title: 'api-gateway-sample'
+  title: 'twitter api'
   version: 1.0.0
 servers:
   - url: 'https://api.twitter.com'
@@ -41,12 +41,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PostAccessTokenResponse'
-        '500':
-           description: 'Internal Server Error'
-           content:
-             application/json:
-               schema:
-                 $ref: '#/components/schemas/ServerError'
   /2/users/me:
     get:
       security:
@@ -60,12 +54,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/GetUsersMeResponse'
-        '500':
-           description: 'Internal Server Error'
-           content:
-             application/json:
-               schema:
-                 $ref: '#/components/schemas/ServerError'
 components:
   securitySchemes:
     auth:
@@ -135,8 +123,3 @@ components:
             username:
               type: string
               nullable: false
-    ServerError:
-      type: object
-      properties:
-        message:
-          type: string

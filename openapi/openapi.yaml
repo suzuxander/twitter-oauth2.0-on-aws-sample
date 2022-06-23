@@ -65,7 +65,7 @@ paths:
         type: aws_proxy
         uri: >-
           arn:aws:apigateway:{REGION}:lambda:path/2015-03-31/functions/arn:aws:lambda:{REGION}:{ACCOUNT_ID}:function:twitter-oauth-sample-api-callback/invocations
-  /accesstoken:
+  /token:
     get:
       description: '../app/api/token/get.ts'
       parameters: []
